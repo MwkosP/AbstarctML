@@ -20,9 +20,9 @@ The project is organized by purpose: <br/>`Data/` handles datasets, EDA, plots, 
 ## Example
 
 ```python
-from Data import setActiveDataset, describeData
-from Models import selectModel, trainModel
-from Evaluation import evaluateModel
+from Data import *
+from Models import *
+from Evaluation import *
 
 #__________________ Setup __________________
 downloadDataset(name="iris",source="sklearn",outputPath="Datasets",saveAs="iris_dataset",)
