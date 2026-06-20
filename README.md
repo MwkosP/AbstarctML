@@ -2,7 +2,7 @@
 
 A small, abstracted ML toolkit inspired by sklearn.
 
-The project is organized by purpose: <br/>`Data/` handles datasets, EDA, plots, and preprocessing; <br/>`Models/` handles estimators; <br/>`Evaluation/` handles metrics; <br/>`Core/` holds shared utilities.
+The project is organized by purpose: <br/>`Data/` handles datasets, EDA, plots, and preprocessing; <br/>`Models/` handles estimators; <br/>`Evaluation/` handles metrics;<br/>`Tuning/` fine tuning functions/pipelines;  <br/>`Pipeline/` Construct entire Pipeliens of the previosuly listed functions easily with Pipeline/ Module  <br/>`Core/` holds shared utilities.
 
 ## Example
 
