@@ -10,10 +10,14 @@ from Core import withSpinner
 
 from .utils import (
     _detectColumnTypes,
+    _describeSummary,
     _encodeColors,
     _getActiveDataset,
     _isListLikeColumn,
     _prepareOutputDir,
+    _printDataFrame,
+    _printSchema,
+    _printWarning,
     _projectFeatureMatrix,
     _safeUniqueCount,
     _saveFigure,
@@ -24,9 +28,13 @@ from .utils import (
 
 
 @withSpinner()
-def describeData() -> pd.DataFrame:
-    """Return mixed-type descriptive stats per column."""
+def describeData(show: bool = True, sample: int | None = None) -> pd.DataFrame:
+    """Print and return mixed-type descriptive stats per column."""
     frame = _toDataFrame(_getActiveDataset())
+    total_rows = len(frame)
+    if sample is not None and total_rows > sample:
+        frame = frame.sample(n=sample, random_state=42)
+
     rows: list[dict[str, Any]] = []
 
     for column in frame.columns:
@@ -100,7 +108,14 @@ def describeData() -> pd.DataFrame:
 
         rows.append(row)
 
-    return pd.DataFrame(rows).set_index("column")
+    description = pd.DataFrame(rows).set_index("column")
+    if show:
+        printable = description.reset_index()[["column", "kind", "dtype", "count", "missingCount", "uniqueCount"]]
+        printable["summary"] = description.apply(_describeSummary, axis=1).to_list()
+        title = f"Data Description (sample {len(frame)} of {total_rows})" if len(frame) != total_rows else "Data Description"
+        _printDataFrame(printable, title)
+
+    return description
 
 
 @withSpinner()
@@ -160,28 +175,34 @@ def getOutliers(method: str = "iqr", zThreshold: float = 3.0) -> pd.DataFrame:
 
 @withSpinner()
 def viewHead(n: int = 5) -> pd.DataFrame:
-    """Return the first n rows."""
+    """Print and return the first n rows."""
     frame = _toDataFrame(_getActiveDataset())
-    return frame.head(n)
+    head = frame.head(n)
+    _printDataFrame(head, f"Head ({n})")
+    return head
 
 
 @withSpinner()
 def viewSample(n: int = 5) -> pd.DataFrame:
-    """Return a random sample of n rows."""
+    """Print and return a random sample of n rows."""
     frame = _toDataFrame(_getActiveDataset())
-    return frame.sample(n=min(n, len(frame))) if len(frame) else frame
+    sample = frame.sample(n=min(n, len(frame))) if len(frame) else frame
+    _printDataFrame(sample, f"Sample ({n})")
+    return sample
 
 
 @withSpinner()
 def viewSchema() -> dict[str, Any]:
-    """Return dtypes, column names, shape, and inferred column groups."""
+    """Print and return dtypes, column names, shape, and inferred column groups."""
     frame = _toDataFrame(_getActiveDataset())
-    return {
+    schema = {
         "shape": frame.shape,
         "columns": frame.columns.tolist(),
         "dtypes": {column: str(dtype) for column, dtype in frame.dtypes.items()},
         "columnTypes": _detectColumnTypes(frame),
     }
+    _printSchema(schema)
+    return schema
 
 
 @withSpinner()
@@ -262,14 +283,15 @@ def plotDataset(
 def plotCorrelations(outputPath: str | Path | None = None, show: bool = False) -> Any:
     """Plot a numeric correlation heatmap."""
     correlations = getCorrelations()
-    fig, ax = plt.subplots()
     if correlations.empty:
-        ax.set_title("No numeric columns")
-    else:
-        image = ax.imshow(correlations, cmap="coolwarm", vmin=-1, vmax=1)
-        ax.set_xticks(range(len(correlations.columns)), correlations.columns, rotation=90)
-        ax.set_yticks(range(len(correlations.index)), correlations.index)
-        fig.colorbar(image, ax=ax)
+        _printWarning("plotCorrelations needs at least two numeric columns. This dataset has no numeric correlation matrix.")
+        return None
+
+    fig, ax = plt.subplots()
+    image = ax.imshow(correlations, cmap="coolwarm", vmin=-1, vmax=1)
+    ax.set_xticks(range(len(correlations.columns)), correlations.columns, rotation=90)
+    ax.set_yticks(range(len(correlations.index)), correlations.index)
+    fig.colorbar(image, ax=ax)
     fig.tight_layout()
     figure = _saveFigure(fig, outputPath)
     _showFigure(fig, show)
@@ -299,6 +321,10 @@ def plotOutliers(
     frame = _toDataFrame(_getActiveDataset())
     numeric_columns = frame.select_dtypes(include="number").columns.tolist()
     selected_columns = columns or numeric_columns
+    if not selected_columns:
+        _printWarning("plotOutliers needs numeric columns. This dataset has no numeric columns to plot.")
+        return {}
+
     output_dir = _prepareOutputDir(outputDir)
     figures: dict[str, Any] = {}
 

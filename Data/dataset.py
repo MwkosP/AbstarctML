@@ -8,6 +8,7 @@ from Core import withSpinner
 
 from .utils import (
     _SKLEARN_LOADERS,
+    _createDatasetSubset,
     _datasetStoragePath,
     _resolveOutputPath,
     _getActiveDatasetConfig,
@@ -21,6 +22,51 @@ from .utils import (
 )
 
 from datasets import get_dataset_infos, load_from_disk
+
+
+@withSpinner()
+def createDatasetSubset(
+    name: str,
+    saveAs: str,
+    sample: int,
+    outputPath: str | Path | None = None,
+    split: str | None = None,
+    columns: list[str] | None = None,
+    stratifyBy: str | list[str] | None = None,
+    balance: bool = False,
+    randomState: int = 42,
+) -> Any:
+    """Create a sampled local dataset subset under Datasets/."""
+    subset, dataset_path = _createDatasetSubset(
+        name=name,
+        save_as=saveAs,
+        sample=sample,
+        output_path=outputPath,
+        split=split,
+        columns=columns,
+        stratify_by=stratifyBy,
+        balance=balance,
+        random_state=randomState,
+    )
+    metadata = {
+        "name": name,
+        "source": "local_subset",
+        "outputPath": str(_resolveOutputPath(outputPath)),
+        "saveAs": saveAs,
+        "sample": sample,
+        "split": split,
+        "columns": columns,
+        "stratifyBy": stratifyBy,
+        "balance": balance,
+        "randomState": randomState,
+        "path": str(dataset_path),
+        "features": {column: str(dtype) for column, dtype in subset.dtypes.items()},
+        "numRows": int(len(subset)),
+    }
+    with (dataset_path / "metadata.json").open("w", encoding="utf-8") as f:
+        json.dump(metadata, f, indent=2, sort_keys=True)
+
+    return subset
 
 
 @withSpinner()

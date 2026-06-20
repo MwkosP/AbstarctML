@@ -1,4 +1,4 @@
-from .dataset import downloadDataset, getDatasetInfo, listAvailableDatasets, setActiveDataset
+from .dataset import createDatasetSubset, downloadDataset, getDatasetInfo, listAvailableDatasets, setActiveDataset
 from .eda import (
     describeData,
     getCorrelations,
@@ -13,14 +13,43 @@ from .eda import (
     viewSample,
     viewSchema,
 )
+from .featureEngineering import (
+    addAverageWordLength,
+    addInteraction,
+    addRatio,
+    addRegexCount,
+    addTextLength,
+    addTextStats,
+    addWordCount,
+    binColumn,
+    combineColumns,
+    createFeature,
+    dropHighCardinality,
+    dropLowVariance,
+    extractDateParts,
+)
 from .preprocessing import dropMissing, encodeData, encodeTarget, imputeMissing, scaleData
 
 __all__ = [
+    "addAverageWordLength",
+    "addInteraction",
+    "addRatio",
+    "addRegexCount",
+    "addTextLength",
+    "addTextStats",
+    "addWordCount",
+    "binColumn",
+    "combineColumns",
+    "createFeature",
     "describeData",
+    "createDatasetSubset",
     "downloadDataset",
+    "dropHighCardinality",
+    "dropLowVariance",
     "dropMissing",
     "encodeData",
     "encodeTarget",
+    "extractDateParts",
     "getCorrelations",
     "getDatasetInfo",
     "getMissingness",
