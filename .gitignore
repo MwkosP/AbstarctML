@@ -1,0 +1,21 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local secrets
+.env
+!.env.example
+bittensor.py
+
+# Generated artifacts (plots, HTML, tuned models, etc.)
+Cache/*
+!Cache/.gitkeep
+Datasets/*
+!Datasets/.gitkeep
