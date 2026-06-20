@@ -1,0 +1,12 @@
+# abstractml
+
+A general-purpose, abstracted ML toolkit (sklearn-lite style).
+
+Organized by purpose, not component type — each module owns one concern
+end to end.
+
+See `rules.md` for structure and conventions.
+
+## Status
+
+Early development.
