@@ -45,9 +45,9 @@ setActiveDataset("iris_raw")
 
 
 #featureEngineering.py
-#createFeature(name="sepalRatio",expression="sepal_length / sepal_width")
-#binColumn(column="sepal_length",bins=3,newColumn="sepalLengthBin")
-#combineColumns(columns=["domain","model"],newColumn="domainModel")
+#createFeature(name="sepalRatio",expression="sepal_length / sepal_width")  #creates a new column with the ratio of sepal_length and sepal_width.
+#binColumn(column="sepal_length",bins=3,newColumn="sepalLengthBin")  #bins the sepal_length column into 3 bins.
+#combineColumns(columns=["domain","model"],newColumn="domainModel")  #combines the domain and model columns into a new column.
 #addTextLength(column="generation")
 #addWordCount(column="generation")
 #addAverageWordLength(column="generation")
