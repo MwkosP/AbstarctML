@@ -2,7 +2,7 @@
 
 # AbstractML
 A small, abstracted ML toolkit to make it easy to perform ML Tasks/code.<br/> <br/>
-<img src="Assets/imgs/AbstractML.png" width="500">
+<img src="Assets/imgs/AbstractML.png" width="400">
 </div>
 
 
