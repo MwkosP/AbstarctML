@@ -68,6 +68,18 @@ print(evaluateModel(trained=trained))
 #__________________ Pipeline __________________
 ```
 
+
+## Quickstart
+```bash
+git clone https://github.com/MwkosP/AbstarctML
+cd AbstractML
+uv sync
+```
+
+and maybe run some examples so you understand how it works
+```bash
+uv run main.py
+```
 ## Status
 
 Early development. See `RULES.md` for structure and conventions.
