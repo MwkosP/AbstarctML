@@ -26,7 +26,7 @@ from Evaluation import *
 
 #__________________ Setup __________________
 downloadDataset(name="iris",source="sklearn",outputPath="Datasets",saveAs="iris_dataset",)
-setActiveDataset("iris_raw")  #this says hey we are talking about this Dataset from now on.
+setActiveDataset("iris_dataset")  #this says hey we are talking about this Dataset from now on.
 
 
 #__________________ Exploratory Data Analysis __________________
